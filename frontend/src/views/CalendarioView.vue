@@ -28,7 +28,8 @@ const calendarOptions = ref({
 
   locale: 'pt-br',
 
-  height:700,
+  contentHeight: 'auto',
+  contentwidth: 'auto',
   eventColor: '#2c3e50',
 
 
@@ -255,7 +256,6 @@ async function carregarAgendamentos() {
 // AO ABRIR A PÁGINA
 onMounted(() => {
    
-    carregarAgendamentos()
   carregarAgendamentos()
 })
 
@@ -281,7 +281,7 @@ onMounted(() => {
 
 .pagina {
 
-  padding: 17px;
+  padding: 15px;
 }
 
 .card {
@@ -294,31 +294,83 @@ onMounted(() => {
 
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
+
+/* =========================
+TAMANHO DAS CÉLULAS
+========================= */
+
 :deep(.fc-daygrid-day) {
 
-  height: 40px;
-
+  min-height: 140px;
 }
+
+/* =========================
+EVENTOS
+========================= */
 
 :deep(.fc-daygrid-event) {
 
-  font-size: 12px;
+  width: 98%;
 
-  padding: 4px;
+  display: block;
 
-  border-radius: 9px;
+  font-size: 14px;
+
+  padding: 8px 12px;
+
+  border-radius: 10px;
+
+  margin-top: 6px;
+
+  border: none;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
 
-:deep(.fc) {
+/* TEXTO */
 
-  font-size: 12px;
+:deep(.fc-event-title) {
+
+  font-weight: 200;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
+
+
+
+/* =========================
+HEADER
+========================= */
 
 :deep(.fc-col-header-cell) {
-  
 
   padding: 15px;
 
+  font-size: 15px;
+}
+
+/* NÚMERO DOS DIAS */
+
+:deep(.fc-daygrid-day-number) {
+
+  font-size: 14px;
+
+  padding: 8px;
+}
+
+/* =========================
+CALENDÁRIO GERAL
+========================= */
+
+:deep(.fc) {
+
   font-size: 14px;
 }
+
 </style>
