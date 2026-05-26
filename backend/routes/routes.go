@@ -4,38 +4,51 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"backend/controllers"
+	"backend/middlewares"
+
 )
 
 func ConfigurarRotas(r *gin.Engine) {
 
-	// CATEGORIAS
-	r.GET("/categorias", controllers.ListarCategorias)
-	r.POST("/categorias", controllers.CriarCategoria)
+	// LOGIN
+	r.POST("/login", controllers.Login)
 
-	// PRODUTOS
-	r.GET("/produtos", controllers.ListarProdutos)
-	r.POST("/produtos", controllers.CriarProduto)
-	r.PUT("/produtos/:id", controllers.AtualizarProduto)
-	r.DELETE("/produtos/:id", controllers.ExcluirProduto)
+	// ROTAS PROTEGIDAS
+	api := r.Group("/")
+	api.Use(middlewares.AuthMiddleware())
+	{
 
-	// VÍNCULOS
-	r.GET("/vinculos", controllers.ListarVinculos)
-	r.POST("/vinculos", controllers.CriarVinculo)
-	r.DELETE("/vinculos/:id", controllers.ExcluirVinculo)
+		// CATEGORIAS
+		api.GET("/categorias", controllers.ListarCategorias)
+		api.POST("/categorias", controllers.CriarCategoria)
 
-	r.GET("/produtos/:id/vinculos",
-		controllers.ListarVinculosPorProduto)
+		// PRODUTOS
+		api.GET("/produtos", controllers.ListarProdutos)
+		api.POST("/produtos", controllers.CriarProduto)
+		api.PUT("/produtos/:id", controllers.AtualizarProduto)
+		api.DELETE("/produtos/:id", controllers.ExcluirProduto)
 
-	// AGENDAMENTOS
-	r.GET("/agendamentos", controllers.ListarAgendamentos)
-	r.POST("/agendamentos", controllers.CriarAgendamento)
-	r.PUT("/agendamentos/:id/finalizar",
-		controllers.FinalizarAgendamento)
+		// VINCULOS
+		api.GET("/vinculos", controllers.ListarVinculos)
+		api.POST("/vinculos", controllers.CriarVinculo)
+		api.DELETE("/vinculos/:id", controllers.ExcluirVinculo)
 
-	// MOVIMENTAÇÕES
-	r.GET("/movimentacoes",
-		controllers.ListarMovimentacoes)
+		api.GET(
+			"/produtos/:id/vinculos",
+			controllers.ListarVinculosPorProduto,
+		)
 
-	r.POST("/movimentacoes",
-		controllers.CriarMovimentacao)
+		// AGENDAMENTOS
+		api.GET("/agendamentos", controllers.ListarAgendamentos)
+		api.POST("/agendamentos", controllers.CriarAgendamento)
+
+		api.PUT(
+			"/agendamentos/:id/finalizar",
+			controllers.FinalizarAgendamento,
+		)
+
+		// MOVIMENTAÇÕES
+		api.GET("/movimentacoes", controllers.ListarMovimentacoes)
+		api.POST("/movimentacoes", controllers.CriarMovimentacao)
+	}
 }
