@@ -64,10 +64,10 @@ function formatarData(data) {
 
   return data
 }
+
 // =======================
 // INIT
 // =======================
-
 onMounted(() => {
 
   carregarDados()
@@ -162,51 +162,51 @@ onMounted(() => {
         </h2>
 
         <div
-  class="mov-item"
-  v-for="mov in movimentacoes.slice(0, 6)"
-  :key="mov.id"
->
+          class="mov-item"
+          v-for="mov in movimentacoes.slice(0, 6)"
+          :key="mov.id"
+        >
 
-  <div class="mov-info">
+          <div class="mov-info">
 
-    <strong>
-      {{ mov.produto }}
-    </strong>
+            <strong>
+              {{ mov.produto }}
+            </strong>
 
-    <span class="mov-data">
+            <span class="mov-data">
 
-  {{ formatarData(mov.data_movimentacao) }}
+              {{ formatarData(mov.data_movimentacao) }}
 
-</span>
+            </span>
 
-  </div>
+          </div>
 
-  <div class="mov-lateral">
+          <div class="mov-lateral">
 
-    <span
-      :class="[
-        'badge',
-        mov.tipo === 'ENTRADA'
-          ? 'entrada'
-          : 'saida'
-      ]"
-    >
-      {{ mov.tipo }}
-    </span>
+            <span
+              :class="[
+                'badge',
+                mov.tipo === 'ENTRADA'
+                  ? 'entrada'
+                  : 'saida'
+              ]"
+            >
+              {{ mov.tipo }}
+            </span>
 
-    <strong
-      :class="
-        mov.tipo === 'ENTRADA'
-          ? 'texto-entrada'
-          : 'texto-saida'
-      "
-    >
-      {{ mov.quantidade }}
-    </strong>
+            <strong
+              :class="
+                mov.tipo === 'ENTRADA'
+                  ? 'texto-entrada'
+                  : 'texto-saida'
+              "
+            >
+              {{ mov.quantidade }}
+            </strong>
 
-  </div>
+          </div>
 
-</div>
+        </div>
 
       </div>
 
@@ -219,20 +219,39 @@ onMounted(() => {
 
         <div
           class="agendamento"
-          v-for="agenda in agendamentos.slice(0, 5)"
+          v-for="agenda in agendamentos.slice(0, 8)"
           :key="agenda.id"
         >
 
-          <strong>
-            {{ agenda.titulo }}
-          </strong>
-<p>
-  {{
-    new Date(
-      agenda.data_agendamento
-    ).toLocaleDateString('pt-BR')
-  }}
-</p>
+          <!-- ESQUERDA -->
+          <div class="agenda-info">
+
+            <strong>
+              {{ agenda.titulo }}
+            </strong>
+
+            <p>
+              {{
+                new Date(
+                  agenda.data_agendamento
+                ).toLocaleDateString('pt-BR')
+              }}
+            </p>
+
+          </div>
+
+          <!-- DIREITA -->
+          <span
+            :class="[
+              'status-agenda',
+
+              agenda.status === 'FINALIZADO'
+                ? 'status-finalizado'
+                : 'status-pendente'
+            ]"
+          >
+            {{ agenda.status }}
+          </span>
 
         </div>
 
@@ -309,91 +328,12 @@ GRID
 
 .card-dashboard {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
+  padding: 26px;
+  border-radius: 14px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
-/* =======================
-TABELA
-======================= */
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 14px;
-  border-bottom: 1px solid #ececec;
-  text-align: left;
-}
-
-th {
-  background-color: #2c3e50;
-  color: white;
-}
-
-/* =======================
-BADGES
-======================= */
-
-.badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.badge.entrada {
-  background-color: #27ae60;
-}
-
-.badge.saida {
-  background-color: #e74c3c;
-}
-
-/* =======================
-AGENDAMENTOS
-======================= */
-
-.agendamento {
-  border-bottom: 1px solid #ececec;
-  padding: 12px 0;
-}
-
-.agendamento p {
-  color: #7f8c8d;
-  margin-top: 5px;
-}
-
-/* =======================
-RESPONSIVO
-======================= */
-
-@media (max-width: 1200px) {
-
-  .cards-resumo {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .grid-dashboard {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 700px) {
-
-  .cards-resumo {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =======================
-MOVIMENTAÇÕES
-======================= */
 
 .mov-item {
 
@@ -442,4 +382,120 @@ MOVIMENTAÇÕES
 
   color: #e74c3c;
 }
+
+/* =======================
+BADGES
+======================= */
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.badge.entrada {
+  background-color: #27ae60;
+}
+
+.badge.saida {
+  background-color: #e74c3c;
+}
+
+/* =======================
+AGENDAMENTOS
+======================= */
+
+.agendamento {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  border-bottom: 1px solid #ececec;
+
+  padding: 14px 0;
+}
+
+.agenda-info {
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+.agenda-info p {
+
+  margin-top: 5px;
+
+  color: #7f8c8d;
+
+  font-size: 14px;
+}
+
+/* =======================
+STATUS AGENDAMENTO
+======================= */
+
+.status-agenda {
+
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  color: white;
+}
+
+/* FINALIZADO */
+
+.status-finalizado {
+
+  background-color: #27ae60;
+}
+
+/* PENDENTE */
+
+.status-pendente {
+
+  background-color: #f39c12;
+}
+
+/* =======================
+RESPONSIVO
+======================= */
+
+@media (max-width: 1200px) {
+
+  .cards-resumo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .cards-resumo {
+    grid-template-columns: 1fr;
+  }
+
+  .agendamento {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+}
+
 </style>

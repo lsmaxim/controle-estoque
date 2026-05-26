@@ -1,8 +1,6 @@
 <script setup>
 
-/*
-  IMPORTA REATIVIDADE
-*/
+
 
 import {
   ref,
@@ -61,9 +59,7 @@ function atualizarHorario() {
   )
 }
 
-/* =========================
-ALTERNAR TEMA
-========================= */
+
 
 function alternarTema() {
 
@@ -92,12 +88,7 @@ function alternarTema() {
   )
 }
 
-/* =========================
-CICLO DE VIDA
-========================= */
-/* =========================
-CARREGAR NOTIFICAÇÕES
-========================= */
+
 
 async function carregarNotificacoes() {
 
@@ -125,9 +116,7 @@ async function carregarNotificacoes() {
         produto.quantidade_minima
     )
 
-    /*
-      Cria notificações
-    */
+    
 
     notificacoes.value = estoqueCritico.map(
       produto => ({
@@ -152,22 +141,16 @@ async function carregarNotificacoes() {
   }
 }
 onMounted(() => {
-/*
-  Carrega notificações
-*/
+
 
 carregarNotificacoes()
-  /*
-    Verifica tema salvo
-  */
+  
 
   const temaSalvo = localStorage.getItem(
     'darkMode'
   )
 
-  /*
-    Se for true
-  */
+  
 
   if (temaSalvo === 'true') {
 
@@ -193,15 +176,11 @@ carregarNotificacoes()
   }, 1000)
 })
 
-/* =========================
-DESTRUIR COMPONENTE
-========================= */
+
 
 onUnmounted(() => {
 
-  /*
-    Remove intervalo
-  */
+  
 
   clearInterval(intervalo)
 })
@@ -210,16 +189,16 @@ onUnmounted(() => {
 
 <template>
 
-  <!-- TOPO -->
+  
   <header class="topbar">
 
-    <!-- ESQUERDA -->
+    
     <div class="topbar-esquerda">
 
-      <!-- TÍTULO -->
+    
       <h1>Painel do Sistema</h1>
 
-      <!-- SUBTÍTULO -->
+      
       <span>
         Controle de estoque e equipamentos
       </span>
@@ -228,12 +207,9 @@ onUnmounted(() => {
 
     <!-- DIREITA -->
     <div class="topbar-direita">
+     
 
-      <!-- BUSCA -->
-      
-
-      <!-- RELÓGIO -->
-      <div class="relogio">
+        <div class="relogio">
 
         {{ horario }}
 

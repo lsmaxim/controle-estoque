@@ -9,8 +9,7 @@ import (
 
 	"backend/database"
 	"backend/models"
-
-) 
+)
 
 func ListarAgendamentos(c *gin.Context) {
 
@@ -22,7 +21,7 @@ func ListarAgendamentos(c *gin.Context) {
 	status,
 	IFNULL(observacao, '') as observacao
 FROM agendamentos
-ORDER BY data_agendamento ASC
+ORDER BY data_agendamento DESC
 	`)
 	if err != nil {
 
