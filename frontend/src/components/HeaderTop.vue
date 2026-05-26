@@ -230,14 +230,7 @@ onUnmounted(() => {
     <div class="topbar-direita">
 
       <!-- BUSCA -->
-      <div class="busca-global">
-
-        <input
-          type="text"
-          placeholder="Buscar no sistema..."
-        />
-
-      </div>
+      
 
       <!-- RELÓGIO -->
       <div class="relogio">

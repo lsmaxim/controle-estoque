@@ -231,9 +231,6 @@ LOGO
 
   margin-bottom: 40px;
 
-  /*
-    Remove hover estranho
-  */
 
   background: transparent !important;
 }
