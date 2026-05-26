@@ -14,15 +14,25 @@ import (
 func ListarAgendamentos(c *gin.Context) {
 
 	rows, err := database.DB.Query(`
-		SELECT
-	id,
-	titulo,
-	data_agendamento,
-	status,
-	IFNULL(observacao, '') as observacao
-FROM agendamentos
-ORDER BY data_agendamento DESC
-	`)
+
+	SELECT
+		id,
+		titulo,
+		data_agendamento,
+		status,
+		IFNULL(observacao, '') as observacao
+
+	FROM agendamentos
+
+	ORDER BY
+		CASE
+			WHEN status = 'PENDENTE' THEN 1
+			WHEN status = 'FINALIZADO' THEN 2
+			ELSE 3
+		END,
+
+		data_agendamento ASC
+`)
 	if err != nil {
 
 		fmt.Println("ERRO SQL:", err)
