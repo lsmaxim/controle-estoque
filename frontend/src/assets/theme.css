@@ -1,0 +1,62 @@
+/* =========================
+LIGHT MODE
+========================= */
+
+:root {
+
+    --bg: #f4f6f9;
+
+    --card-bg: #ffffff;
+
+    --text: #243447;
+
+    --text-secondary: #7f8c8d;
+
+    --border: #dcdcdc;
+
+    --hover: #edf1f5;
+
+    --sidebar: #243447;
+
+    --sidebar-hover: rgba(255, 255, 255, 0.12);
+
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+DARK MODE
+========================= */
+
+.dark {
+
+    --bg: #121826;
+
+    --card-bg: #1b2431;
+
+    --text: #f1f5f9;
+
+    --text-secondary: #94a3b8;
+
+    --border: #2d3748;
+
+    --hover: #2a3441;
+
+    --sidebar: #0f172a;
+
+    --sidebar-hover: rgba(255, 255, 255, 0.08);
+
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================
+BODY
+========================= */
+
+body {
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    transition: 0.3s;
+}
