@@ -12,4 +12,6 @@ type Movimentacao struct {
 	Observacao string `json:"observacao"`
 
 	DataMovimentacao string `json:"data_movimentacao"`
+
+	UsuarioEmail string `json:"usuario_email"`
 }

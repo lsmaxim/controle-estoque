@@ -284,6 +284,7 @@ onMounted(() => {
             <th>Quantidade</th>
             <th>Observação</th>
             <th>Data</th>
+            <th>Usuário</th>
 
           </tr>
 
@@ -331,7 +332,9 @@ onMounted(() => {
               {{ mov.data_movimentacao }}
             </td>
            
-
+            <td>
+              {{ mov.usuario_email}}
+            </td> 
           </tr>
 
         </tbody>

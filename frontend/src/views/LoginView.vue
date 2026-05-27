@@ -44,7 +44,7 @@ async function fazerLogin() {
       class="login-box"
       @submit.prevent="fazerLogin"
     >
-
+      <img src="/img/LOGOTIPO-XB.PNG.ico" alt="Logo">
       <h1>Login</h1>
 
       <input
@@ -135,5 +135,17 @@ async function fazerLogin() {
 
   cursor: pointer;
 }
+.logo {
 
+  display: flex;
+
+  justify-content: center;
+}
+
+.logo img {
+
+  width: 100px;
+
+  margin-bottom: 20px;
+}
 </style>
