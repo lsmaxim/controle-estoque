@@ -7,11 +7,15 @@ import (
 
 	"backend/database"
 	"backend/models"
+
 )
 
 func CriarMovimentacao(c *gin.Context) {
 
 	var movimentacao models.Movimentacao
+
+	// PEGA USUÁRIO DO TOKEN
+	email, _ := c.Get("email")
 
 	// RECEBE JSON
 	if err := c.ShouldBindJSON(&movimentacao); err != nil {
@@ -27,18 +31,20 @@ func CriarMovimentacao(c *gin.Context) {
 	_, err := database.DB.Exec(
 
 		`INSERT INTO movimentacoes
-		(
-			produto_id,
-			tipo,
-			quantidade,
-			observacao
-		)
-		VALUES (?, ?, ?, ?)`,
+	(
+		produto_id,
+		tipo,
+		quantidade,
+		observacao,
+		usuario_email
+	)
+	VALUES (?, ?, ?, ?, ?)`,
 
 		movimentacao.ProdutoID,
 		movimentacao.Tipo,
 		movimentacao.Quantidade,
 		movimentacao.Observacao,
+		email,
 	)
 
 	if err != nil {
@@ -90,6 +96,7 @@ func CriarMovimentacao(c *gin.Context) {
 		"mensagem": "Movimentação realizada com sucesso",
 	})
 }
+
 func ListarMovimentacoes(c *gin.Context) {
 
 	rows, err := database.DB.Query(`
@@ -105,6 +112,8 @@ func ListarMovimentacoes(c *gin.Context) {
 			m.quantidade,
 
 			IFNULL(m.observacao, ''),
+
+			IFNULL(m.usuario_email, ''),
 
 			DATE_FORMAT(
 				m.data_movimentacao,
@@ -136,26 +145,30 @@ func ListarMovimentacoes(c *gin.Context) {
 
 	for rows.Next() {
 
-		var id int
-		var produto string
-		var tipo string
-		var quantidade int
-		var observacao string
-		var data []byte
-		err := rows.Scan(
+	var id int
+	var produto string
+	var tipo string
+	var quantidade int
+	var observacao string
+	var usuario string
+	var data []byte
 
-			&id,
+	err := rows.Scan(
 
-			&produto,
+		&id,
 
-			&tipo,
+		&produto,
 
-			&quantidade,
+		&tipo,
 
-			&observacao,
+		&quantidade,
 
-			&data,
-		)
+		&observacao,
+
+		&usuario,
+
+		&data,
+	)
 
 		if err != nil {
 
@@ -177,6 +190,8 @@ func ListarMovimentacoes(c *gin.Context) {
 				"quantidade": quantidade,
 
 				"observacao": observacao,
+
+				"usuario": usuario,
 
 				"data_movimentacao": string(data),
 			},

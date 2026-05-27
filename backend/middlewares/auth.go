@@ -54,7 +54,12 @@ func AuthMiddleware() gin.HandlerFunc {
 
 			return
 		}
+		claims, ok := token.Claims.(jwt.MapClaims)
 
+		if ok {
+
+			c.Set("email", claims["email"])
+		}
 		c.Next()
 	}
 }

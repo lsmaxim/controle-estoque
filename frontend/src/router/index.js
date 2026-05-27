@@ -7,8 +7,15 @@ import VinculosView from '../views/VinculosView.vue'
 import CalendarioView from '../views/CalendarioView.vue'
 import RelatorioView from '../views/RelatorioView.vue'
 import HistoricoMovimentacoesView from '../views/HistoricoMovimentacoesView.vue'
+import LoginView from '../views/LoginView.vue'
 
 const routes = [
+
+  // LOGIN
+  {
+    path: '/login',
+    component: LoginView
+  },
 
   // DASHBOARD
   {
@@ -16,42 +23,35 @@ const routes = [
     component: DashboardView
   },
 
-  // CATEGORIAS
   {
     path: '/categorias',
     component: CategoriasView
   },
 
-  // PRODUTOS
   {
     path: '/produtos',
     component: ProdutosView
   },
 
-  // VÍNCULOS
   {
     path: '/vinculos',
     component: VinculosView
   },
 
-  // CALENDÁRIO
   {
     path: '/calendario',
     component: CalendarioView
   },
 
-  // RELATÓRIOS
   {
     path: '/relatorios',
     component: RelatorioView
   },
 
-  // MOVIMENTAÇÕES
   {
     path: '/movimentacoes',
     component: HistoricoMovimentacoesView
   }
-
 ]
 
 const router = createRouter({
@@ -59,6 +59,24 @@ const router = createRouter({
   history: createWebHistory(),
 
   routes
+})
+
+// ===========================
+// PROTEÇÃO LOGIN
+// ===========================
+
+router.beforeEach((to, from, next) => {
+
+  const token =
+    localStorage.getItem('token')
+
+  // SE NÃO ESTIVER LOGADO
+  if (!token && to.path !== '/login') {
+
+    return next('/login')
+  }
+
+  next()
 })
 
 export default router

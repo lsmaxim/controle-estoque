@@ -314,9 +314,9 @@ EVENTOS
 
   display: block;
 
-  font-size: 14px;
+  font-size: 12px;
 
-  padding: 8px 12px;
+  padding: 8px 11px;
 
   border-radius: 10px;
 
@@ -359,7 +359,7 @@ HEADER
 
 :deep(.fc-daygrid-day-number) {
 
-  font-size: 14px;
+  font-size: 12px;
 
   padding: 8px;
 }
