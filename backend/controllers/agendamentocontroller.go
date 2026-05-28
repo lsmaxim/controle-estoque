@@ -9,7 +9,6 @@ import (
 
 	"backend/database"
 	"backend/models"
-
 )
 
 func ListarAgendamentos(c *gin.Context) {
