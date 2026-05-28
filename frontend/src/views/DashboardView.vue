@@ -219,7 +219,7 @@ onMounted(() => {
 
         <div
           class="agendamento"
-          v-for="agenda in agendamentos.slice(0, 8)"
+          v-for="agenda in agendamentos.slice(0, 6)"
           :key="agenda.id"
         >
 

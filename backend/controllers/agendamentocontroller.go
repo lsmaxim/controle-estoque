@@ -9,6 +9,7 @@ import (
 
 	"backend/database"
 	"backend/models"
+
 )
 
 func ListarAgendamentos(c *gin.Context) {
@@ -31,7 +32,8 @@ func ListarAgendamentos(c *gin.Context) {
 			ELSE 3
 		END,
 
-		data_agendamento ASC
+		data_agendamento DESC
+		
 `)
 	if err != nil {
 
