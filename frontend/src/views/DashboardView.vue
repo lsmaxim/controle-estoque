@@ -242,16 +242,25 @@ onMounted(() => {
 
           <!-- DIREITA -->
           <span
-            :class="[
-              'status-agenda',
+  :class="[
+    'status-agenda',
 
-              agenda.status === 'FINALIZADO'
-                ? 'status-finalizado'
-                : 'status-pendente'
-            ]"
-          >
-            {{ agenda.status }}
-          </span>
+    new Date(agenda.data_agendamento) < new Date() &&
+    agenda.status !== 'FINALIZADO'
+      ? 'status-atrasado'
+
+      : agenda.status === 'FINALIZADO'
+        ? 'status-finalizado'
+        : 'status-pendente'
+  ]"
+>
+  {{
+    new Date(agenda.data_agendamento) < new Date() &&
+    agenda.status !== 'FINALIZADO'
+      ? 'ATRASADO'
+      : agenda.status
+  }}
+</span>
 
         </div>
 
@@ -466,7 +475,10 @@ STATUS AGENDAMENTO
 
   background-color: #f39c12;
 }
+.status-atrasado {
 
+  background-color: #ff7606;
+}
 /* =======================
 RESPONSIVO
 ======================= */
