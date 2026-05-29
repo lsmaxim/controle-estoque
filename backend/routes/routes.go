@@ -5,7 +5,6 @@ import (
 
 	"backend/controllers"
 	"backend/middlewares"
-
 )
 
 func ConfigurarRotas(r *gin.Engine) {
@@ -51,4 +50,6 @@ func ConfigurarRotas(r *gin.Engine) {
 		api.GET("/movimentacoes", controllers.ListarMovimentacoes)
 		api.POST("/movimentacoes", controllers.CriarMovimentacao)
 	}
+
+	r.GET("/equipamentos/:id/qrcode", controllers.GerarQRCode)
 }

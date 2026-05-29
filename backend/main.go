@@ -8,6 +8,7 @@ import (
 
 	"backend/database"
 	"backend/routes"
+
 )
 
 func main() {
@@ -15,6 +16,9 @@ func main() {
 	database.Conectar()
 
 	r := gin.Default()
+
+	// LIBERA PASTA UPLOADS
+	r.Static("/uploads", "./uploads")
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},
