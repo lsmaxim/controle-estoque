@@ -52,4 +52,9 @@ func ConfigurarRotas(r *gin.Engine) {
 	}
 
 	r.GET("/equipamentos/:id/qrcode", controllers.GerarQRCode)
+
+	r.GET(
+		"/equipamentos/:id/etiqueta",
+		controllers.GerarEtiqueta,
+	)
 }
