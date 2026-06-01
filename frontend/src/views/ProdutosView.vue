@@ -424,6 +424,56 @@ async function excluirProduto(id) {
   }
 }
 
+//Gerar QR Code
+const gerarQRCode = async (id) => {
+   
+  try {
+
+    const response = await api.get(
+      `/equipamentos/${id}/qrcode`
+    )
+
+    console.log(response.data)
+
+    alert('QR Code gerado com sucesso')
+
+  } catch (error) {
+
+    console.error(error)
+
+    alert('Erro ao gerar QR Code')
+
+  }
+
+  
+}
+
+const historico = ref([])
+const modalHistorico = ref(false)
+
+async function abrirHistorico(id) {
+
+  console.log("Produto clicado:", id)
+
+  try {
+
+    const response = await api.get(
+      `/produtos/${id}/historico`
+    )
+
+    console.log(response.data)
+
+    historico.value = Array.isArray(response.data)
+      ? response.data
+      : []
+
+    modalHistorico.value = true
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 // =======================
 // INIT
 // =======================
@@ -783,7 +833,17 @@ onMounted(() => {
               >
                 Excluir
               </button>
-
+              <button 
+              @click="gerarQRCode(produto.id)" 
+              class="botao-gerarQRCode">
+              Gerar QR
+              </button>
+             <button
+  class="botao-historico"
+  @click="abrirHistorico(produto.id)"
+>
+  Histórico
+</button>
             </td>
 
           </tr>
@@ -795,7 +855,59 @@ onMounted(() => {
     </div>
 
   </div>
+<!-- MODAL HISTÓRICO -->
+<div
+  v-if="modalHistorico"
+  class="modal-overlay"
+>
 
+  <div class="modal-historico">
+
+    <h2>Histórico do Produto</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Usuário</th>
+          <th>Ação</th>
+          <th>Descrição</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr
+          v-for="item in historico"
+          :key="item.id"
+        >
+          <td>{{ item.data_registro }}</td>
+          <td>{{ item.usuario }}</td>
+          <td>{{ item.acao }}</td>
+          <td>{{ item.descricao }}</td>
+        </tr>
+
+        <tr v-if="historico.length === 0">
+          <td colspan="4">
+            Nenhum histórico encontrado
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <button
+      class="botao"
+      @click="modalHistorico = false"
+    >
+      Fechar
+    </button>
+
+  </div>
+
+</div>
 </template>
 
 <style scoped>
@@ -968,7 +1080,15 @@ BOTÕES
   cursor: pointer;
   margin-left: 10px;
 }
-
+.botao-gerarQRCode {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 9px;
+}
 /* =======================
 TABELA
 ======================= */
@@ -1026,5 +1146,40 @@ RESPONSIVO
     grid-template-columns: 1fr;
   }
 }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
 
+.modal-historico {
+  background: white;
+  width: 80%;
+  max-width: 900px;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.botao-historico {
+  background-color: #8e44ad;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 9px;
+}
+
+.botao-historico:hover {
+  background-color: #6c3483;
+}
 </style>

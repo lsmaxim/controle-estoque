@@ -16,7 +16,10 @@ func ConfigurarRotas(r *gin.Engine) {
 	api := r.Group("/")
 	api.Use(middlewares.AuthMiddleware())
 	{
-
+		api.GET(
+			"/produtos/:id/historico",
+			controllers.ListarHistorico,
+		)
 		// CATEGORIAS
 		api.GET("/categorias", controllers.ListarCategorias)
 		api.POST("/categorias", controllers.CriarCategoria)
@@ -57,4 +60,5 @@ func ConfigurarRotas(r *gin.Engine) {
 		"/equipamentos/:id/etiqueta",
 		controllers.GerarEtiqueta,
 	)
+
 }

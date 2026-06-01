@@ -472,12 +472,11 @@ STATUS AGENDAMENTO
 /* PENDENTE */
 
 .status-pendente {
-
-  background-color: #f39c12;
+  background-color: #ff7606;
 }
 .status-atrasado {
 
-  background-color: #ff7606;
+  background-color: #e73b27;
 }
 /* =======================
 RESPONSIVO

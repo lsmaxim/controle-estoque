@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -131,6 +132,13 @@ func CriarProduto(c *gin.Context) {
 
 	id, _ := result.LastInsertId()
 
+	RegistrarHistorico(
+		int(id),
+		"Administrador",
+		"CADASTRO",
+		"Equipamento cadastrado",
+	)
+
 	c.JSON(http.StatusCreated, gin.H{
 		"id":       id,
 		"mensagem": "Produto criado com sucesso!",
@@ -142,20 +150,18 @@ func CriarProduto(c *gin.Context) {
 // =======================
 func ExcluirProduto(c *gin.Context) {
 
-	// PEGA ID DA URL
 	id := c.Param("id")
 
-	// TOTAL DE VÍNCULOS
+	idInt, _ := strconv.Atoi(id)
+
 	var total int
 
-	// VERIFICA SE EXISTEM VÍNCULOS
 	err := database.DB.QueryRow(`
 		SELECT COUNT(*)
 		FROM vinculos_produtos
 		WHERE produto_pai_id = ?
 	`, id).Scan(&total)
 
-	// ERRO AO CONSULTAR
 	if err != nil {
 
 		fmt.Println(err)
@@ -167,7 +173,6 @@ func ExcluirProduto(c *gin.Context) {
 		return
 	}
 
-	// SE EXISTIR VÍNCULO
 	if total > 0 {
 
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -177,13 +182,11 @@ func ExcluirProduto(c *gin.Context) {
 		return
 	}
 
-	// EXCLUI PRODUTO
 	_, err = database.DB.Exec(`
 		DELETE FROM produtos
 		WHERE id = ?
 	`, id)
 
-	// ERRO AO EXCLUIR
 	if err != nil {
 
 		fmt.Println(err)
@@ -195,14 +198,20 @@ func ExcluirProduto(c *gin.Context) {
 		return
 	}
 
-	// SUCESSO
+	RegistrarHistorico(
+		idInt,
+		"Administrador",
+		"EXCLUSAO",
+		"Produto excluído",
+	)
+
 	c.JSON(http.StatusOK, gin.H{
 		"mensagem": "Produto excluído com sucesso!",
 	})
 }
 
 // =======================
-// ATUALIZAR PRODUTO (CORRIGIDO)
+// ATUALIZAR PRODUTO
 // =======================
 func AtualizarProduto(c *gin.Context) {
 
@@ -260,6 +269,15 @@ func AtualizarProduto(c *gin.Context) {
 		})
 		return
 	}
+
+	idInt, _ := strconv.Atoi(id)
+
+	RegistrarHistorico(
+		idInt,
+		"Administrador",
+		"EDICAO",
+		"Produto atualizado",
+	)
 
 	c.JSON(http.StatusOK, gin.H{
 		"mensagem": "Produto atualizado com sucesso!",
