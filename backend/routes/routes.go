@@ -5,7 +5,6 @@ import (
 
 	"backend/controllers"
 	"backend/middlewares"
-
 )
 
 func ConfigurarRotas(r *gin.Engine) {
@@ -19,9 +18,9 @@ func ConfigurarRotas(r *gin.Engine) {
 	{
 
 		api.GET(
-	"/relatorios/estoque",
-	controllers.GerarRelatorioEstoque,
-)
+			"/relatorios/estoque",
+			controllers.GerarRelatorioEstoque,
+		)
 
 		api.GET(
 			"/produtos/:id/historico",
