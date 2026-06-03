@@ -62,8 +62,14 @@ function formatarData(data) {
 
   if (!data) return '-'
 
-  return data
+  const dataLimpa = data.split('T')[0]
+
+  const [ano, mes, dia] = dataLimpa.split('-')
+
+  return `${dia}/${mes}/${ano}`
 }
+
+
 
 // =======================
 // INIT
@@ -160,7 +166,7 @@ onMounted(() => {
         <h2>
           Últimas movimentações
         </h2>
-
+        
         <div
           class="mov-item"
           v-for="mov in movimentacoes.slice(0, 6)"
@@ -174,10 +180,8 @@ onMounted(() => {
             </strong>
 
             <span class="mov-data">
-
-              {{ formatarData(mov.data_movimentacao) }}
-
-            </span>
+  {{ mov.data_movimentacao }}
+</span>
 
           </div>
 
@@ -230,13 +234,9 @@ onMounted(() => {
               {{ agenda.titulo }}
             </strong>
 
-            <p>
-              {{
-                new Date(
-                  agenda.data_agendamento
-                ).toLocaleDateString('pt-BR')
-              }}
-            </p>
+           <p>
+           {{ formatarData(agenda.data_agendamento) }}
+           </p>
 
           </div>
 
@@ -411,6 +411,7 @@ BADGES
 .badge.saida {
   background-color: #e74c3c;
 }
+
 
 /* =======================
 AGENDAMENTOS

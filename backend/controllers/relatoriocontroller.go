@@ -70,7 +70,7 @@ func GerarRelatorioEstoque(c *gin.Context) {
 		)
 
 		pdf.SetFont("Arial", "B", 16)
-
+		pdf.SetTextColor(0, 0, 0)
 		pdf.CellFormat(
 			190,
 			10,
@@ -172,7 +172,7 @@ func GerarRelatorioEstoque(c *gin.Context) {
 	// RODAPÉ
 	// ==========================
 	pdf.SetFooterFunc(func() {
-
+		pdf.SetTextColor(0, 0, 0)
 		pdf.SetY(-15)
 
 		pdf.SetFont("Arial", "I", 8)
@@ -181,7 +181,8 @@ func GerarRelatorioEstoque(c *gin.Context) {
 			0,
 			10,
 			fmt.Sprintf(
-				"Página %d",
+				textoPDF("Página %d"),
+
 				pdf.PageNo(),
 			),
 			"",
@@ -233,7 +234,7 @@ func GerarRelatorioEstoque(c *gin.Context) {
 
 			pdf.SetTextColor(0, 0, 0)
 		}
-
+		//Colunas da tabela
 		pdf.CellFormat(
 			60,
 			8,

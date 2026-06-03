@@ -4,6 +4,37 @@ import api from '../services/api'
 
 const relatorios = ref([])
 
+
+
+async function baixarRelatorio() {
+
+  const token = localStorage.getItem('token')
+
+  const response = await api.get(
+    '/relatorios/estoque',
+    {
+      responseType: 'blob',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+
+  const url = window.URL.createObjectURL(
+    new Blob([response.data])
+  )
+
+  const link = document.createElement('a')
+
+  link.href = url
+  link.download = 'relatorio_estoque.pdf'
+
+  document.body.appendChild(link)
+
+  link.click()
+
+  link.remove()
+}
 onMounted(async () => {
   try {
     const response = await api.get('/produtos')
@@ -22,7 +53,10 @@ onMounted(async () => {
   <div class="card">
 
     <h1>Relatórios do Sistema</h1>
-
+<button @click="baixarRelatorio" class="baixar-relatorio">
+              📄 Relatório de Estoque
+        </button>
+        <p> </p>
     <table>
 
       <thead>
@@ -96,5 +130,13 @@ th {
 tr:hover {
   background-color: #f8f9fa;
 }
-
+.baixar-relatorio {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 </style>
