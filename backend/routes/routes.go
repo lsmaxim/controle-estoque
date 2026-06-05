@@ -5,6 +5,7 @@ import (
 
 	"backend/controllers"
 	"backend/middlewares"
+
 )
 
 func ConfigurarRotas(r *gin.Engine) {
@@ -35,7 +36,7 @@ func ConfigurarRotas(r *gin.Engine) {
 		api.POST("/produtos", controllers.CriarProduto)
 		api.PUT("/produtos/:id", controllers.AtualizarProduto)
 		api.DELETE("/produtos/:id", controllers.ExcluirProduto)
-
+		
 		// VINCULOS
 		api.GET("/vinculos", controllers.ListarVinculos)
 		api.POST("/vinculos", controllers.CriarVinculo)
@@ -67,4 +68,8 @@ func ConfigurarRotas(r *gin.Engine) {
 		controllers.GerarEtiqueta,
 	)
 
+	r.GET(
+		"/qrcode/equipamento/:id",
+		controllers.BuscarProdutoQRCode,
+	)
 }

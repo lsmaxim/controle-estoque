@@ -8,7 +8,7 @@ import CalendarioView from '../views/CalendarioView.vue'
 import RelatorioView from '../views/RelatorioView.vue'
 import HistoricoMovimentacoesView from '../views/HistoricoMovimentacoesView.vue'
 import LoginView from '../views/LoginView.vue'
-
+import EquipamentoPublicoView from '../views/EquipamentoPublicoView.vue'
 const routes = [
 
   // LOGIN
@@ -16,7 +16,10 @@ const routes = [
     path: '/login',
     component: LoginView
   },
-
+{
+  path: '/equipamento/:id',
+  component: EquipamentoPublicoView
+},
   // DASHBOARD
   {
     path: '/',
@@ -70,9 +73,18 @@ router.beforeEach((to, from, next) => {
   const token =
     localStorage.getItem('token')
 
-  // SE NÃO ESTIVER LOGADO
-  if (!token && to.path !== '/login') {
+  const rotasPublicas = [
+    '/login'
+  ]
 
+  const ehPaginaEquipamento =
+    to.path.startsWith('/equipamento/')
+
+  if (
+    !token &&
+    !rotasPublicas.includes(to.path) &&
+    !ehPaginaEquipamento
+  ) {
     return next('/login')
   }
 

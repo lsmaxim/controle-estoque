@@ -283,3 +283,52 @@ func AtualizarProduto(c *gin.Context) {
 		"mensagem": "Produto atualizado com sucesso!",
 	})
 }
+func BuscarProdutoQRCode(c *gin.Context) {
+
+	id := c.Param("id")
+
+	fmt.Println("ID recebido:", id)
+
+	var produto struct {
+		ID               int    `json:"id"`
+		Nome             string `json:"nome"`
+		Marca            string `json:"marca"`
+		Modelo           string `json:"modelo"`
+		Setor            string `json:"setor"`
+		DescricaoTecnica string `json:"descricao_tecnica"`
+	}
+
+	err := database.DB.QueryRow(`
+		SELECT
+			id,
+			nome,
+			marca,
+			modelo,
+			setor,
+			descricao_tecnica
+		FROM produtos
+		WHERE id = ?
+	`, id).Scan(
+		&produto.ID,
+		&produto.Nome,
+		&produto.Marca,
+		&produto.Modelo,
+		&produto.Setor,
+		&produto.DescricaoTecnica,
+	)
+
+	if err != nil {
+
+		fmt.Println("ERRO QUERY:", err)
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"erro": err.Error(),
+		})
+
+		return
+	}
+
+	fmt.Printf("PRODUTO: %+v\n", produto)
+
+	c.JSON(http.StatusOK, produto)
+}

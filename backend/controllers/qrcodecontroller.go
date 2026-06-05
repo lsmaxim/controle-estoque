@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	qrcode "github.com/skip2/go-qrcode"
+
 )
 
 func GerarQRCode(c *gin.Context) {
@@ -16,9 +17,9 @@ func GerarQRCode(c *gin.Context) {
 
 	// URL que será aberta no QR
 	url := fmt.Sprintf(
-		"http://localhost:5173/equipamento/%s",
-		id,
-	)
+    "http://192.168.0.7:5173/equipamento/%s",
+    id,
+)
 
 	// Nome do arquivo
 	nomeArquivo := fmt.Sprintf("%s.png", id)
