@@ -8,34 +8,58 @@ import (
 
 	"github.com/gin-gonic/gin"
 	qrcode "github.com/skip2/go-qrcode"
-
 )
 
 func GerarQRCode(c *gin.Context) {
 
 	id := c.Param("id")
 
-	// URL que será aberta no QR
+	// ==========================
+	// URL QUE O QR VAI ABRIR
+	// ==========================
 	url := fmt.Sprintf(
-    "http://192.168.0.7:5173/equipamento/%s",
-    id,
-)
+		"http://192.168.0.7:5173/equipamento/%s",
+		id,
+	)
 
-	// Nome do arquivo
-	nomeArquivo := fmt.Sprintf("%s.png", id)
+	// ==========================
+	// NOME DO ARQUIVO
+	// ==========================
+	nomeArquivo := fmt.Sprintf(
+		"equipamento_%s.png",
+		id,
+	)
 
-	// Caminho
+	// ==========================
+	// PASTA DOS QRCODES
+	// ==========================
+	err := os.MkdirAll(
+		"uploads/qrcodes",
+		os.ModePerm,
+	)
+
+	if err != nil {
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"erro": err.Error(),
+		})
+
+		return
+	}
+
+	// ==========================
+	// CAMINHO COMPLETO
+	// ==========================
 	caminho := filepath.Join(
 		"uploads",
 		"qrcodes",
 		nomeArquivo,
 	)
 
-	// Cria pasta
-	os.MkdirAll("uploads/qrcodes", os.ModePerm)
-
-	// Gera QR
-	err := qrcode.WriteFile(
+	// ==========================
+	// GERA QR CODE
+	// ==========================
+	err = qrcode.WriteFile(
 		url,
 		qrcode.Medium,
 		256,
@@ -51,9 +75,13 @@ func GerarQRCode(c *gin.Context) {
 		return
 	}
 
+	// ==========================
+	// RETORNO
+	// ==========================
 	c.JSON(http.StatusOK, gin.H{
-		"mensagem": "QR Code gerado",
+		"mensagem": "QR Code gerado com sucesso",
 		"arquivo":  nomeArquivo,
-		"url":      "/uploads/qrcodes/" + nomeArquivo,
+		"url_qr":   url,
+		"imagem":   "/uploads/qrcodes/" + nomeArquivo,
 	})
 }

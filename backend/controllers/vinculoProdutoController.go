@@ -459,3 +459,68 @@ func ExcluirVinculo(c *gin.Context) {
 		"mensagem": "Vínculo excluído com sucesso",
 	})
 }
+
+func ListarComponentesQRCode(c *gin.Context) {
+
+	id := c.Param("id")
+
+	rows, err := database.DB.Query(`
+		SELECT
+			c.id,
+			c.nome,
+			c.marca,
+			c.modelo,
+			vp.quantidade
+		FROM vinculos_produtos vp
+
+		INNER JOIN produtos c
+			ON c.id = vp.componente_id
+
+		WHERE vp.produto_pai_id = ?
+		ORDER BY c.nome
+	`, id)
+
+	if err != nil {
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"erro": err.Error(),
+		})
+
+		return
+	}
+
+	defer rows.Close()
+
+	var componentes []gin.H
+
+	for rows.Next() {
+
+		var id int
+		var nome string
+		var marca string
+		var modelo string
+		var quantidade int
+
+		err := rows.Scan(
+			&id,
+			&nome,
+			&marca,
+			&modelo,
+			&quantidade,
+		)
+
+		if err != nil {
+			continue
+		}
+
+		componentes = append(componentes, gin.H{
+			"id":         id,
+			"nome":       nome,
+			"marca":      marca,
+			"modelo":     modelo,
+			"quantidade": quantidade,
+		})
+	}
+
+	c.JSON(http.StatusOK, componentes)
+}

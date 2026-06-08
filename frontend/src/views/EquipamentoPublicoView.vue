@@ -7,19 +7,29 @@ import axios from 'axios'
 const route = useRoute()
 
 const equipamento = ref(null)
+const componentes = ref([])
 const carregando = ref(true)
 
 async function carregarEquipamento() {
 
   try {
 
+    // DADOS DO EQUIPAMENTO
     const { data } = await axios.get(
-      `http://192.168.0.7:5173/qrcode/equipamento/${route.params.id}`
+      `http://192.168.0.7:8080/qrcode/equipamento/${route.params.id}`
     )
 
     equipamento.value = data
 
-    console.log(data)
+    // COMPONENTES VINCULADOS
+    const respostaComponentes = await axios.get(
+      `http://192.168.0.7:8080/qrcode/equipamento/${route.params.id}/componentes`
+    )
+
+    componentes.value = respostaComponentes.data
+
+    console.log('Equipamento:', data)
+    console.log('Componentes:', respostaComponentes.data)
 
   } catch (error) {
 
@@ -33,14 +43,11 @@ async function carregarEquipamento() {
 
 onMounted(() => {
 
-  console.log('VIEW CARREGADA')
-  console.log('ID:', route.params.id)
-
   carregarEquipamento()
+
 })
 
 </script>
-
 <template>
 
   <div class="pagina-publica">
@@ -80,7 +87,34 @@ onMounted(() => {
         <strong>Descrição Técnica:</strong>
         {{ equipamento.descricao_tecnica }}
       </div>
+<hr>
 
+<h2>Componentes vinculados</h2>
+
+<div
+  v-if="componentes.length === 0"
+>
+  Nenhum componente vinculado.
+</div>
+
+<div
+  v-for="comp in componentes"
+  :key="comp.id"
+  class="componente"
+>
+  <strong>
+    {{ comp.nome }}
+  </strong>
+
+  <div>
+    {{ comp.marca }}
+    {{ comp.modelo }}
+  </div>
+
+  <div>
+    Quantidade: {{ comp.quantidade }}
+  </div>
+</div>
     </div>
 
     <div
@@ -136,5 +170,26 @@ h1 {
 
   font-size: 16px;
 }
+.componente {
 
+  padding: 12px;
+
+  margin-top: 10px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+
+  background: #fafafa;
+}
+
+hr {
+
+  margin: 25px 0;
+}
+
+h2 {
+
+  margin-bottom: 15px;
+}
 </style>

@@ -287,7 +287,7 @@ func BuscarProdutoQRCode(c *gin.Context) {
 
 	id := c.Param("id")
 
-	fmt.Println("ID recebido:", id)
+	fmt.Println("ID RECEBIDO:", id)
 
 	var produto struct {
 		ID               int    `json:"id"`
@@ -319,16 +319,14 @@ func BuscarProdutoQRCode(c *gin.Context) {
 
 	if err != nil {
 
-		fmt.Println("ERRO QUERY:", err)
+		fmt.Println("ERRO SQL:", err)
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"erro": err.Error(),
+		c.JSON(http.StatusNotFound, gin.H{
+			"erro": "Equipamento não encontrado",
 		})
 
 		return
 	}
-
-	fmt.Printf("PRODUTO: %+v\n", produto)
 
 	c.JSON(http.StatusOK, produto)
 }
