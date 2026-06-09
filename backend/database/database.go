@@ -10,17 +10,22 @@ import (
 var DB *sql.DB
 
 func Conectar() {
+
 	usuario := "root"
 	senha := "#@control@#"
 	banco := "controle_estoque"
 
-	dsn := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s",
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(127.0.0.1:3306)/%s?parseTime=true&charset=utf8mb4&loc=Local",
 		usuario,
 		senha,
 		banco,
 	)
 
-	conexao, erro := sql.Open("mysql", dsn)
+	conexao, erro := sql.Open(
+		"mysql",
+		dsn,
+	)
 
 	if erro != nil {
 		panic(erro)

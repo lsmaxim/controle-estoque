@@ -8,6 +8,7 @@ import CalendarioView from '../views/CalendarioView.vue'
 import RelatorioView from '../views/RelatorioView.vue'
 import HistoricoMovimentacoesView from '../views/HistoricoMovimentacoesView.vue'
 import LoginView from '../views/LoginView.vue'
+import ChamadosView from '../views/ChamadosView.vue'
 import EquipamentoPublicoView from '../views/EquipamentoPublicoView.vue'
 const routes = [
 
@@ -54,6 +55,11 @@ const routes = [
   {
     path: '/movimentacoes',
     component: HistoricoMovimentacoesView
+  },
+
+  {
+    path: '/chamados',
+    component: ChamadosView
   }
 ]
 

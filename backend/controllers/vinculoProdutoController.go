@@ -203,6 +203,7 @@ func CriarVinculo(c *gin.Context) {
 		"mensagem": "Vínculo criado com sucesso!",
 	})
 }
+
 func ListarVinculosPorProduto(c *gin.Context) {
 
 	id := c.Param("id")

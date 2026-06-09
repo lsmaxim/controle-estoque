@@ -105,7 +105,12 @@ import HeaderTop from '../components/HeaderTop.vue'
         >
           📄 Relatórios
         </RouterLink>
-
+<RouterLink
+  to="/chamados"
+  class="menu-item"
+>
+  🎫 Chamados
+</RouterLink>
       </nav>
 
     </aside>
