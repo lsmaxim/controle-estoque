@@ -136,13 +136,31 @@ func FecharChamado(c *gin.Context) {
 
 	id := c.Param("id")
 
+	var dados struct {
+		Solucao string `json:"solucao"`
+	}
+
+	if err := c.ShouldBindJSON(&dados); err != nil {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"erro": err.Error(),
+		})
+
+		return
+	}
+
 	_, err := database.DB.Exec(`
 		UPDATE chamados
 		SET
 			status = 'FECHADO',
+			solucao = ?,
 			data_fechamento = NOW()
 		WHERE id = ?
-	`, id)
+	`,
+		dados.Solucao,
+
+		id,
+	)
 
 	if err != nil {
 

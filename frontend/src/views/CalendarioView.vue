@@ -1,17 +1,13 @@
+```vue
 <script setup>
 
 import { ref, onMounted } from 'vue'
-
 import Swal from 'sweetalert2'
-
 import api from '../services/api'
 
 import FullCalendar from '@fullcalendar/vue3'
-
 import dayGridPlugin from '@fullcalendar/daygrid'
-
 import interactionPlugin from '@fullcalendar/interaction'
-
 
 // EVENTOS
 const eventos = ref([])
@@ -29,17 +25,18 @@ const calendarOptions = ref({
   locale: 'pt-br',
 
   contentHeight: 'auto',
-  contentwidth: 'auto',
+
+  displayEventTime: false,
+
+  dayMaxEvents: true,
+
   eventColor: '#2c3e50',
 
-
-  // EVENTOS
   events: eventos.value,
 
   // CLICAR NA DATA
   dateClick: async (info) => {
 
-    // POPUP
     const resultado = await Swal.fire({
 
       title: 'Novo agendamento',
@@ -55,14 +52,12 @@ const calendarOptions = ref({
       showCancelButton: true
     })
 
-    // CANCELADO
     if (!resultado.isConfirmed) {
       return
     }
 
     try {
 
-      // SALVAR NO BACKEND
       await api.post('/agendamentos', {
 
         titulo: resultado.value,
@@ -70,10 +65,8 @@ const calendarOptions = ref({
         data_agendamento: info.dateStr
       })
 
-      // RECARREGA
       carregarAgendamentos()
 
-      // SUCESSO
       Swal.fire({
 
         icon: 'success',
@@ -101,7 +94,6 @@ const calendarOptions = ref({
   // CLICAR NO EVENTO
   eventClick: async (info) => {
 
-    // DADOS
     const titulo = info.event.title
 
     const data = info.event.startStr
@@ -111,7 +103,6 @@ const calendarOptions = ref({
         ? 'FINALIZADO'
         : 'PENDENTE'
 
-    // POPUP INICIAL
     const resultado = await Swal.fire({
 
       icon: 'info',
@@ -145,12 +136,10 @@ const calendarOptions = ref({
       showCancelButton: true
     })
 
-    // CANCELADO
     if (!resultado.isConfirmed) {
       return
     }
 
-    // OBSERVAÇÃO
     const observacao = await Swal.fire({
 
       title: 'Observação final',
@@ -166,14 +155,12 @@ const calendarOptions = ref({
       showCancelButton: true
     })
 
-    // CANCELADO
     if (!observacao.isConfirmed) {
       return
     }
 
     try {
 
-      // FINALIZA
       await api.put(
         `/agendamentos/${info.event.id}/finalizar`,
         {
@@ -181,10 +168,8 @@ const calendarOptions = ref({
         }
       )
 
-      // RECARREGA
       carregarAgendamentos()
 
-      // SUCESSO
       Swal.fire({
 
         icon: 'success',
@@ -215,19 +200,19 @@ async function carregarAgendamentos() {
 
   try {
 
-    // API
     const resposta = await api.get('/agendamentos')
 
     console.log(resposta.data)
 
-    // CONVERTE PARA FULLCALENDAR
     eventos.value = resposta.data.map(item => ({
 
       id: item.id,
 
       title: item.titulo,
 
-      date: item.data_agendamento,
+      start: item.data_agendamento,
+
+      allDay: true,
 
       color:
         item.status === 'FINALIZADO'
@@ -235,7 +220,6 @@ async function carregarAgendamentos() {
           : '#2c3e50'
     }))
 
-    // ATUALIZA CALENDÁRIO
     calendarOptions.value.events = [...eventos.value]
 
   } catch (erro) {
@@ -255,7 +239,7 @@ async function carregarAgendamentos() {
 
 // AO ABRIR A PÁGINA
 onMounted(() => {
-   
+
   carregarAgendamentos()
 })
 
@@ -295,18 +279,14 @@ onMounted(() => {
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
-/* =========================
-TAMANHO DAS CÉLULAS
-========================= */
+/* CÉLULAS */
 
 :deep(.fc-daygrid-day) {
 
-  min-height: 140px;
+  min-height: 90px;
 }
 
-/* =========================
-EVENTOS
-========================= */
+/* EVENTOS */
 
 :deep(.fc-daygrid-event) {
 
@@ -316,11 +296,11 @@ EVENTOS
 
   font-size: 12px;
 
-  padding: 8px 11px;
+  padding: 6px 10px;
 
-  border-radius: 10px;
+  border-radius: 8px;
 
-  margin-top: 6px;
+  margin-top: 4px;
 
   border: none;
 
@@ -335,27 +315,23 @@ EVENTOS
 
 :deep(.fc-event-title) {
 
-  font-weight: 200;
+  font-weight: 500;
 
   overflow: hidden;
 
   text-overflow: ellipsis;
 }
 
-
-
-/* =========================
-HEADER
-========================= */
+/* HEADER */
 
 :deep(.fc-col-header-cell) {
 
-  padding: 15px;
+  padding: 12px;
 
   font-size: 15px;
 }
 
-/* NÚMERO DOS DIAS */
+/* NÚMEROS DOS DIAS */
 
 :deep(.fc-daygrid-day-number) {
 
@@ -364,9 +340,7 @@ HEADER
   padding: 8px;
 }
 
-/* =========================
-CALENDÁRIO GERAL
-========================= */
+/* CALENDÁRIO */
 
 :deep(.fc) {
 
@@ -374,3 +348,4 @@ CALENDÁRIO GERAL
 }
 
 </style>
+```

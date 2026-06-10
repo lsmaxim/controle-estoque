@@ -60,12 +60,28 @@ func ConfigurarRotas(r *gin.Engine) {
 		api.POST("/movimentacoes", controllers.CriarMovimentacao)
 	}
 
+	api.GET(
+		"/usuarios",
+		controllers.ListarUsuarios,
+	)
+
 	api.GET("/chamados", controllers.ListarChamados)
 	api.POST("/chamados", controllers.CriarChamado)
 	api.PUT(
 		"/chamados/:id/fechar",
 		controllers.FecharChamado,
 	)
+
+	api.POST(
+		"/equipamentos-usuarios",
+		controllers.VincularEquipamentoUsuario,
+	)
+
+	api.GET(
+		"/usuarios/:id/equipamentos",
+		controllers.ListarEquipamentosUsuario,
+	)
+
 	r.GET("/equipamentos/:id/qrcode", controllers.GerarQRCode)
 
 	r.GET(
