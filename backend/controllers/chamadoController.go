@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,20 +16,23 @@ import (
 func ListarChamados(c *gin.Context) {
 
 	rows, err := database.DB.Query(`
-		SELECT
-			id,
-			titulo,
-			descricao,
-			solicitante,
-			setor,
-			equipamento_id,
-			status,
-			prioridade,
-			data_abertura,
-			data_fechamento
-		FROM chamados
-		ORDER BY data_abertura DESC
-	`)
+    SELECT
+    c.id,
+    IFNULL(c.titulo,''),
+    IFNULL(c.descricao,''),
+    IFNULL(c.solicitante,''),
+    IFNULL(c.setor,''),
+    c.equipamento_id,
+    IFNULL(p.nome,''),
+    IFNULL(c.status,'ABERTO'),
+    IFNULL(c.prioridade,'MEDIA'),
+    c.data_abertura,
+    c.data_fechamento
+FROM chamados c
+LEFT JOIN produtos p
+    ON p.id = c.equipamento_id
+ORDER BY c.data_abertura DESC
+`)
 
 	if err != nil {
 
@@ -54,6 +58,7 @@ func ListarChamados(c *gin.Context) {
 			&chamado.Solicitante,
 			&chamado.Setor,
 			&chamado.EquipamentoID,
+			&chamado.EquipamentoNome,
 			&chamado.Status,
 			&chamado.Prioridade,
 			&chamado.DataAbertura,
@@ -174,4 +179,64 @@ func FecharChamado(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"mensagem": "Chamado fechado com sucesso!",
 	})
+}
+
+func BuscarChamado(c *gin.Context) {
+
+	id := c.Param("id")
+
+	var chamado models.Chamado
+
+	err := database.DB.QueryRow(`
+		SELECT
+			c.id,
+			IFNULL(c.titulo,''),
+			IFNULL(c.descricao,''),
+			IFNULL(c.solicitante,''),
+			IFNULL(c.setor,''),
+			c.equipamento_id,
+			IFNULL(p.nome,''),
+			IFNULL(c.status,'ABERTO'),
+			IFNULL(c.prioridade,'MEDIA'),
+			IFNULL(c.solucao,''),
+			c.data_abertura,
+			c.data_fechamento
+		FROM chamados c
+		LEFT JOIN produtos p
+			ON p.id = c.equipamento_id
+		WHERE c.id = ?
+	`, id).Scan(
+		&chamado.ID,
+		&chamado.Titulo,
+		&chamado.Descricao,
+		&chamado.Solicitante,
+		&chamado.Setor,
+		&chamado.EquipamentoID,
+		&chamado.EquipamentoNome,
+		&chamado.Status,
+		&chamado.Prioridade,
+		&chamado.Solucao,
+		&chamado.DataAbertura,
+		&chamado.DataFechamento,
+	)
+
+	if err != nil {
+
+		if err == sql.ErrNoRows {
+
+			c.JSON(http.StatusNotFound, gin.H{
+				"erro": "Chamado não encontrado",
+			})
+
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"erro": err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(http.StatusOK, chamado)
 }

@@ -65,6 +65,8 @@ func ConfigurarRotas(r *gin.Engine) {
 		controllers.ListarUsuarios,
 	)
 
+	api.GET("/chamados/:id", controllers.BuscarChamado)
+
 	api.GET("/chamados", controllers.ListarChamados)
 	api.POST("/chamados", controllers.CriarChamado)
 	api.PUT(

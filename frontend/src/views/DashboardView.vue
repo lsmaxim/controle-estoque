@@ -109,7 +109,7 @@ onMounted(() => {
         <h3>Total Produtos</h3>
 
         <span>
-          {{ produtos.length }}
+          {{produtos.length}}
         </span>
 
       </div>

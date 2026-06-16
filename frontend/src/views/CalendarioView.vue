@@ -134,6 +134,7 @@ const calendarOptions = ref({
       cancelButtonText: 'Cancelar',
 
       showCancelButton: true
+      
     })
 
     if (!resultado.isConfirmed) {

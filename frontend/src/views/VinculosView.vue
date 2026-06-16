@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onRenderTracked } from 'vue'
 import Swal from 'sweetalert2'
 import api from '../services/api'
 
@@ -263,26 +263,23 @@ onMounted(() => {
 
         <!-- COMPONENTE -->
         <div class="campo">
-
           <label>Componente</label>
 
           <select v-model="componente_id">
 
-            <option disabled value="">
-              Selecione
-            </option>
+          <option value="">
+          Selecione um componente
+          </option>
 
-            <option
-              v-for="componente in componentes"
-              :key="componente.id"
-              :value="componente.id"
-            >
+          <option
+          v-for="item in componentes"
+         :key="item.id"
+         :value="item.id"
+         >
+        {{ item.nome }}
+         </option>
 
-              {{ componente.nome }}
-
-            </option>
-
-          </select>
+</select>
 
         </div>
 

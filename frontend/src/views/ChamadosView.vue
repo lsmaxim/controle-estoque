@@ -2,6 +2,21 @@
 import { ref, onMounted } from 'vue'
 import api from '../services/api'
 
+import { computed } from 'vue'
+
+const filtroStatus = ref('')
+
+const chamadosFiltrados = computed(() => {
+
+  if (!filtroStatus.value) {
+    return chamados.value
+  }
+
+  return chamados.value.filter(
+    chamado => chamado.status === filtroStatus.value
+  )
+})
+
 const chamados = ref([])
 
 async function carregarChamados() {
@@ -89,6 +104,82 @@ async function fecharChamado(id) {
       icon: 'error',
       title: 'Erro',
       text: 'Não foi possível fechar o chamado.'
+    })
+  }
+}
+
+async function verChamado(id) {
+
+  try {
+
+    const { data } = await api.get(`/chamados/${id}`)
+
+    await Swal.fire({
+
+      title: `Chamado #${data.id}`,
+
+      width: 800,
+
+      html: `
+
+        <div style="text-align:left">
+
+          <p><strong>Título:</strong> ${data.titulo}</p>
+
+          <p><strong>Solicitante:</strong> ${data.solicitante}</p>
+
+          <p><strong>Setor:</strong> ${data.setor}</p>
+
+          <p><strong>Equipamento:</strong> ${data.equipamento_nome || '-'}</p>
+
+          <p><strong>Prioridade:</strong> ${data.prioridade}</p>
+
+          <p><strong>Status:</strong> ${data.status}</p>
+
+          <p><strong>Data de abertura:</strong>
+            ${formatarData(data.data_abertura)}
+          </p>
+
+          <p><strong>Data de fechamento:</strong>
+            ${formatarData(data.data_fechamento)}
+          </p>
+
+          <hr>
+
+          <p><strong>Descrição:</strong></p>
+
+          <div style="
+            background:#f8f9fa;
+            padding:10px;
+            border-radius:6px;
+            margin-bottom:10px;
+          ">
+            ${data.descricao || '-'}
+          </div>
+
+          <p><strong>Solução:</strong></p>
+
+          <div style="
+            background:#f8f9fa;
+            padding:10px;
+            border-radius:6px;
+          ">
+            ${data.solucao || 'Chamado ainda não finalizado.'}
+          </div>
+
+        </div>
+
+      `
+    })
+
+  } catch (err) {
+
+    console.error(err)
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Erro',
+      text: 'Não foi possível carregar os detalhes do chamado.'
     })
   }
 }
@@ -227,6 +318,23 @@ async function carregarEquipamentos() {
     p => p.tipo === 'EQUIPAMENTO'
   )
 }
+
+function formatarData(data) {
+
+  if (!data) return '-'
+
+  return new Date(data).toLocaleString('pt-BR', {
+
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+
 onMounted(() => {
 
   carregarChamados()
@@ -236,38 +344,60 @@ onMounted(() => {
 
 <template>
 
-
-
-
   <div class="pagina">
 
-  
     <h1>Chamados</h1>
-<button
-    class="btn-novo"
-    @click="novoChamado"
-  >
-    + Novo Chamado
-  </button>
-  <p></p>
+
+    <div class="acoes">
+
+      <button
+        class="btn-novo"
+        @click="novoChamado"
+      >
+        + Novo Chamado
+      </button>
+
+      <select v-model="filtroStatus">
+
+        <option value="">
+          Todos
+        </option>
+
+        <option value="ABERTO">
+          Abertos
+        </option>
+
+        <option value="FECHADO">
+          Fechados
+        </option>
+
+      </select>
+<p></p>
+    </div>
+
     <table>
 
       <thead>
+
         <tr>
           <th>ID</th>
           <th>Título</th>
+          <th>Equipamento</th>
           <th>Solicitante</th>
           <th>Setor</th>
           <th>Prioridade</th>
-          <th>Status</th>
-          <th>Ações</th>
+          <th>Data de Abertura</th>
+          <th>Data de Fechamento</th>
+          <th>Status</th> 
+          <th>Detalhes</th>
         </tr>
+
       </thead>
 
       <tbody>
 
         <tr
-          v-for="chamado in chamados"
+          v-for="chamado in chamadosFiltrados"
           :key="chamado.id"
         >
 
@@ -275,11 +405,17 @@ onMounted(() => {
 
           <td>{{ chamado.titulo }}</td>
 
+          <td>{{ chamado.equipamento_nome || '-' }}</td>
+
           <td>{{ chamado.solicitante }}</td>
 
           <td>{{ chamado.setor }}</td>
 
           <td>{{ chamado.prioridade }}</td>
+
+          <td>{{ formatarData(chamado.data_abertura) }}</td>
+
+          <td>{{ formatarData(chamado.data_fechamento) }}</td>
 
           <td>
 
@@ -300,9 +436,14 @@ onMounted(() => {
             >
               Fechar
             </button>
-
+<button
+  @click="verChamado(chamado.id)"
+>
+  Detalhes
+</button>
           </td>
 
+          
         </tr>
 
       </tbody>
@@ -343,6 +484,7 @@ th {
   color: white;
 }
 
+
 .status {
 
   padding: 5px 10px;
@@ -354,10 +496,12 @@ th {
   font-weight: bold;
 }
 
+
 .aberto {
 
   background: #ffeeba;
 }
+
 
 .fechado {
 
@@ -380,4 +524,25 @@ button {
 
   color: white;
 }
+
+.acoes {
+
+  display: flex;
+
+  gap: 10px;
+
+  margin-bottom: 15px;
+
+  align-items: center;
+}
+
+.acoes select {
+
+  padding: 8px;
+
+  border-radius: 6px;
+
+  border: 1px solid #ccc;
+}
+
 </style>
